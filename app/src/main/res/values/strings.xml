@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">CadastroPlacas</string>
+
+    <string-array name="cor">
+        <item>Branco</item>
+        <item>Prata</item>
+        <item>Cinza</item>
+        <item>Preto</item>
+        <item>Verde</item>
+        <item>Azul</item>
+        <item>Vermelho</item>
+        <item>Bege</item>
+        <item>Amarelo</item>
+        <item>Rosa</item>
+        <item>Outra</item>
+    </string-array>
+
+    <string-array name="uf">
+        <item>AC</item>
+        <item>AM</item>
+        <item>AP</item>
+        <item>BA</item>
+        <item>CE</item>
+        <item>DF</item>
+        <item>GO</item>
+        <item>MA</item>
+        <item>MG</item>
+        <item>MS</item>
+        <item>MT</item>
+        <item>PA</item>
+        <item>PI</item>
+        <item>PR</item>
+        <item>PE</item>
+        <item>PB</item>
+        <item>PB</item>
+        <item>RJ</item>
+        <item>RN</item>
+        <item>RO</item>
+        <item>RS</item>
+        <item>RR</item>
+        <item>SE</item>
+        <item>SC</item>
+        <item>SP</item>
+        <item>TO</item>
+    </string-array>
+</resources>

@@ -22,25 +22,38 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnOrdSerial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="serial"
                 android:text="Serial" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/btnOrdPlaca"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="placa"
                 android:text="Placa" />
+
+            <Button
+                android:id="@+id/btnNovo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="novo"
+                android:text="Novo" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Imp/Exp"
+                android:onClick="importarExportar"/>
 
         </GridLayout>
 
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="320dp"
+            android:layout_height="340dp"
             android:id="@+id/lista"/>
 
     </LinearLayout>

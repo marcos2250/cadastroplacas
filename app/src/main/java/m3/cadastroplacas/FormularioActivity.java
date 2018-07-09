@@ -7,23 +7,26 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class FormularioActivity extends AppCompatActivity {
 
     private EditText placa, serial, obs, ano, versao;
-    private Spinner cor, uf;
+    private Spinner uf;
+    private AutoCompleteTextView cor;
     private RadioGroup semestre;
     private SQLiteDatabase db;
+    private String idcadastro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_formulario);
 
         /* SQLiteDatabase é usado para abrir ou criar o banco através do método
         openOrCreateDatabase(banco, modo de abertura, padrão)
@@ -49,46 +52,49 @@ public class MainActivity extends AppCompatActivity {
         versao = (EditText) findViewById(R.id.versao);
 
         semestre = (RadioGroup) findViewById(R.id.semestre);
-        cor = (Spinner) findViewById(R.id.cor);
+        cor = (AutoCompleteTextView) findViewById(R.id.cor);
         uf = (Spinner) findViewById(R.id.uf);
+
+        Intent intent = getIntent();
+        idcadastro = intent.getStringExtra("idcadastro");
+
+        if (idcadastro != null && !idcadastro.isEmpty()) {
+            carregarDados("select * from tbplacas where id='" + idcadastro + "'");
+        }
+    }
+
+    public void carregar(View view) {
+        carregarDados("select * from tbplacas where placa='" + placa.getText().toString().toUpperCase() + "'");
     }
 
     public void salvar(View view) {
-        String id = null;
-        Cursor cursor = db.rawQuery("select id from tbplacas where placa='" + placa.getText().toString() + "'", null); // comando select com cursor
-        cursor.moveToFirst(); // posiciona o curso no primeiro registro
-        if (!cursor.isAfterLast()) {
-            id = cursor.getString(0);
-        }
-        cursor.close();
-
         ContentValues values = new ContentValues(); // pegar as coluna com os valores digitados
-        if (id != null) {
-            values.put("id", id);
+        if (idcadastro != null && !idcadastro.isEmpty()) {
+            values.put("id", idcadastro);
         }
-        values.put("placa", placa.getText().toString());
+        values.put("placa", placa.getText().toString().toUpperCase().replaceAll("[^A-Z\\d]", ""));
         values.put("serial", serial.getText().toString());
         values.put("ano", ano.getText().toString());
         values.put("semestre", semestre.getCheckedRadioButtonId());
         values.put("versao", versao.getText().toString());
-        values.put("cor", cor.getSelectedItem().toString());
+        values.put("cor", cor.getText().toString());
         values.put("uf", uf.getSelectedItem().toString());
         values.put("obs", obs.getText().toString());
 
-        if (id == null) {
+        if (idcadastro != null && !idcadastro.isEmpty()) {
             db.insert("tbplacas", null, values); //salvar
         } else {
-            db.update("tbplacas", values, "id="+id, null); //atualizar
+            db.update("tbplacas", values, "id=" + idcadastro, null); //atualizar
         }
 
-        Toast.makeText(MainActivity.this, "Gravado com sucesso", Toast.LENGTH_SHORT).show();
+        Toast.makeText(FormularioActivity.this.getApplicationContext(), "Gravado com sucesso", Toast.LENGTH_SHORT).show();
     }
 
-    public void carregar(View view) {
-        String id = null;
-        Cursor cursor = db.rawQuery("select * from tbplacas where placa='" + placa.getText().toString() + "'", null); // comando select com cursor
+    private void carregarDados(String sql) {
+        Cursor cursor = db.rawQuery(sql, null); // comando select com cursor
         cursor.moveToFirst(); // posiciona o curso no primeiro registro
         if (!cursor.isAfterLast()) {
+            idcadastro = cursor.getString(0);
             placa.setText(cursor.getString(1));
             serial.setText(cursor.getString(2));
             ano.setText(cursor.getString(3));
@@ -97,28 +103,17 @@ public class MainActivity extends AppCompatActivity {
                 ((RadioButton) semestre.getChildAt(semestreReg)).setChecked(true);
             }
             versao.setText(cursor.getString(5));
-            cor.setSelection(getSpinnerIndex(uf, cursor.getString(6)));
+            cor.setText(cursor.getString(6));
             uf.setSelection(getSpinnerIndex(uf, cursor.getString(7)));
             obs.setText(cursor.getString(8));
+
+            notificar("Dados carregados");
+        } else {
+            notificar("Veiculo nao cadastrado");
         }
 
         cursor.close();
-    }
 
-    public void importarExportar(View view) {
-        Intent intent = new Intent(this, ImportExportActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.editText);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
-
-    public void listar(View view) {
-        Intent intent = new Intent(this, ListaActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.editText);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString){
@@ -128,5 +123,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return 0;
+    }
+
+    private void notificar(String msg) {
+        Toast.makeText(FormularioActivity.this.getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 }

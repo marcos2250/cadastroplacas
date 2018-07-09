@@ -1,5 +1,6 @@
 package m3.cadastroplacas;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,6 +24,11 @@ public class ListaActivity extends AppCompatActivity {
         atualizaLista("select * from tbplacas order by placa");
     }
 
+    public void novo(View view) {
+        Intent intent = new Intent(this, FormularioActivity.class);
+        intent.putExtra("idcadastro", "");
+        startActivity(intent);
+    }
 
     public void serial(View view) {
         atualizaLista("select * from tbplacas order by ano, serial, placa");
@@ -30,6 +36,11 @@ public class ListaActivity extends AppCompatActivity {
 
     public void placa(View view) {
         atualizaLista("select * from tbplacas order by placa");
+    }
+
+    public void importarExportar(View view) {
+        Intent intent = new Intent(this, ImportExportActivity.class);
+        startActivity(intent);
     }
 
     private void atualizaLista(String sql) {
@@ -50,6 +61,11 @@ public class ListaActivity extends AppCompatActivity {
                 // ListView Clicked item value
                 String itemValue = (String) listView.getItemAtPosition(position);
 
+                Intent intent = new Intent(ListaActivity.this, FormularioActivity.class);
+                String idcadastro = itemValue.split(":")[0];
+                intent.putExtra("idcadastro", idcadastro);
+                startActivity(intent);
+
             }
         });
 
@@ -62,7 +78,8 @@ public class ListaActivity extends AppCompatActivity {
         Cursor cursor = db.rawQuery(sql, null); // comando select com cursor
         cursor.moveToFirst(); // posiciona o curso no primeiro registro
         while (!cursor.isAfterLast()) {
-            lista.add(cursor.getString(1) + " "
+            lista.add(cursor.getString(0) + ": "
+                    + cursor.getString(1) + " "
                     + cursor.getString(2) + " "
                     + cursor.getString(3) + "/"
                     + cursor.getString(4) + " "

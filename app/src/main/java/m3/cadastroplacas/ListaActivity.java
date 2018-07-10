@@ -42,12 +42,6 @@ public class ListaActivity extends AppCompatActivity {
         atualizaLista("select * from tbplacas order by placa");
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        atualizaLista("select * from tbplacas order by placa");
-    }
-
     public void novo(View view) {
         Intent intent = new Intent(this, FormularioActivity.class);
         intent.putExtra("idcadastro", "");
@@ -104,8 +98,7 @@ public class ListaActivity extends AppCompatActivity {
             lista.add(cursor.getString(0) + ": "
                     + cursor.getString(1) + " "
                     + cursor.getString(2) + " "
-                    + cursor.getString(6) + " "
-                    + cursor.getString(7) + " "
+                    + cursor.getString(3) + " "
                     + cursor.getString(8));
             cursor.moveToNext();
         }

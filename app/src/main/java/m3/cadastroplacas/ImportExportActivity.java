@@ -42,18 +42,20 @@ public class ImportExportActivity extends AppCompatActivity {
     }
 
     public void importar(View view) {
-        int cont = 0;
+        int sucesso = 0;
+        int erro = 0;
         String tab = text.getText().toString();
         String[] lines = tab.split("\\r?\\n");
         for (String line : lines) {
-            String[] tokens = line.split(";");
+            String[] tokens = (line + " ").split(";");
 
-            if (tokens.length != 8) {
+            if (tokens.length < 8) {
+                erro++;
                 continue;
             }
 
             ContentValues values = new ContentValues(); // pegar as coluna com os valores digitados
-            values.put("placa", tokens[0]);
+            values.put("placa", tokens[0].toUpperCase().replaceAll("[^A-Z\\d]", ""));
             values.put("serial", tokens[1]);
             values.put("ano", tokens[2]);
             values.put("semestre", tokens[3]);
@@ -62,11 +64,15 @@ public class ImportExportActivity extends AppCompatActivity {
             values.put("uf", tokens[6]);
             values.put("obs", tokens[7]);
 
-            db.insert("tbplacas", null, values); //salvar
-            cont++;
+            if (db.insert("tbplacas", null, values) > 0) {
+                sucesso++;
+            } else {
+                erro++;
+            }
         }
 
-        Toast.makeText(this.getApplicationContext(), "Sucesso: " + cont, Toast.LENGTH_LONG);
+        Toast.makeText(ImportExportActivity.this.getApplicationContext(),
+                "Sucesso: " + sucesso + ", Erros: " + erro, Toast.LENGTH_LONG).show();
     }
 
 }

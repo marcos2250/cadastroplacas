@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">CadastroPlacas</string>
+    <string name="app_name">Cadastro de Placas</string>
 
     <string-array name="uf">
+        <item></item>
         <item>AC</item>
         <item>AM</item>
         <item>AP</item>

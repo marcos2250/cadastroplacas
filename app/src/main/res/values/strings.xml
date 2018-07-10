@@ -1,20 +1,6 @@
 <resources>
     <string name="app_name">CadastroPlacas</string>
 
-    <string-array name="cor">
-        <item>Branco</item>
-        <item>Prata</item>
-        <item>Cinza</item>
-        <item>Preto</item>
-        <item>Verde</item>
-        <item>Azul</item>
-        <item>Vermelho</item>
-        <item>Bege</item>
-        <item>Amarelo</item>
-        <item>Rosa</item>
-        <item>Outra</item>
-    </string-array>
-
     <string-array name="uf">
         <item>AC</item>
         <item>AM</item>

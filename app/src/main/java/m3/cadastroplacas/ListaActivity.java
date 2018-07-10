@@ -16,11 +16,35 @@ import java.util.List;
 public class ListaActivity extends AppCompatActivity {
 
     private ListView listView;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista);
+
+        /* SQLiteDatabase é usado para abrir ou criar o banco através do método
+        openOrCreateDatabase(banco, modo de abertura, padrão)
+        */
+        db = openOrCreateDatabase("dbplacas.db", MODE_PRIVATE, null);
+        db.execSQL("create table if not exists tbplacas (" +
+                "id integer primary key autoincrement, " +
+                "placa char(7)," +
+                "serial integer," +
+                "ano integer," +
+                "semestre char(1)," +
+                "versao char(4)," +
+                "cor varchar(16)," +
+                "uf char(2)," +
+                "obs varchar(255)" +
+                ")");
+
+        atualizaLista("select * from tbplacas order by placa");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         atualizaLista("select * from tbplacas order by placa");
     }
 
@@ -73,7 +97,6 @@ public class ListaActivity extends AppCompatActivity {
     }
 
     private List<String> listar(String sql) {
-        SQLiteDatabase db = openOrCreateDatabase("dbplacas.db", MODE_PRIVATE, null);
         List<String> lista = new ArrayList<>();
         Cursor cursor = db.rawQuery(sql, null); // comando select com cursor
         cursor.moveToFirst(); // posiciona o curso no primeiro registro
@@ -81,8 +104,6 @@ public class ListaActivity extends AppCompatActivity {
             lista.add(cursor.getString(0) + ": "
                     + cursor.getString(1) + " "
                     + cursor.getString(2) + " "
-                    + cursor.getString(3) + "/"
-                    + cursor.getString(4) + " "
                     + cursor.getString(6) + " "
                     + cursor.getString(7) + " "
                     + cursor.getString(8));

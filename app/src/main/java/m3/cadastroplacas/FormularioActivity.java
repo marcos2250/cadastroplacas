@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -23,26 +24,18 @@ public class FormularioActivity extends AppCompatActivity {
     private SQLiteDatabase db;
     private String idcadastro;
 
+    private static final String[] CORES = new String [] {
+        "Branco", "Cinza", "Prata", "Preto",
+        "Vermelho", "Azul", "Verde", "Bege",
+        "Amarelo", "Rosa"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
 
-        /* SQLiteDatabase é usado para abrir ou criar o banco através do método
-        openOrCreateDatabase(banco, modo de abertura, padrão)
-        */
         db = openOrCreateDatabase("dbplacas.db", MODE_PRIVATE, null);
-        db.execSQL("create table if not exists tbplacas (" +
-                "id integer primary key autoincrement, " +
-                "placa char(7)," +
-                "serial char(6)," +
-                "ano char(4)," +
-                "semestre char(1)," +
-                "versao char(4)," +
-                "cor varchar(16)," +
-                "uf char(2)," +
-                "obs varchar(255)" +
-                ")");
 
         /* Associar a variavel java com o recurso do id xml*/
         placa = (EditText) findViewById(R.id.placa);
@@ -52,7 +45,11 @@ public class FormularioActivity extends AppCompatActivity {
         versao = (EditText) findViewById(R.id.versao);
 
         semestre = (RadioGroup) findViewById(R.id.semestre);
+
         cor = (AutoCompleteTextView) findViewById(R.id.cor);
+        cor.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, CORES));
+
         uf = (Spinner) findViewById(R.id.uf);
 
         Intent intent = getIntent();
@@ -75,19 +72,22 @@ public class FormularioActivity extends AppCompatActivity {
         values.put("placa", placa.getText().toString().toUpperCase().replaceAll("[^A-Z\\d]", ""));
         values.put("serial", serial.getText().toString());
         values.put("ano", ano.getText().toString());
-        values.put("semestre", semestre.getCheckedRadioButtonId());
+        values.put("semestre", semestre.indexOfChild(semestre.findViewById(semestre.getCheckedRadioButtonId())));
         values.put("versao", versao.getText().toString());
         values.put("cor", cor.getText().toString());
         values.put("uf", uf.getSelectedItem().toString());
         values.put("obs", obs.getText().toString());
 
-        if (idcadastro != null && !idcadastro.isEmpty()) {
-            db.insert("tbplacas", null, values); //salvar
+        long result;
+        if (idcadastro == null || idcadastro.isEmpty()) {
+            result = db.insert("tbplacas", null, values); //salvar
         } else {
-            db.update("tbplacas", values, "id=" + idcadastro, null); //atualizar
+            result = db.update("tbplacas", values, "id=" + idcadastro, null); //atualizar
         }
 
-        Toast.makeText(FormularioActivity.this.getApplicationContext(), "Gravado com sucesso", Toast.LENGTH_SHORT).show();
+        if (result >= 0) {
+            notificar("Gravado com sucesso");
+        }
     }
 
     private void carregarDados(String sql) {

@@ -92,9 +92,7 @@
         <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/cor"
-            android:entries="@array/cor"
-            android:prompt="@array/cor"/>
+            android:id="@+id/cor"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -129,12 +127,6 @@
             android:layout_height="wrap_content"
             android:text="Carregar"
             android:onClick="carregar"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Listar"
-            android:onClick="listar"/>
 
     </LinearLayout>
 </ScrollView>

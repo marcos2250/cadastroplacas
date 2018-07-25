@@ -22,12 +22,11 @@ public class FormularioActivity extends AppCompatActivity {
     private AutoCompleteTextView cor;
     private RadioGroup semestre;
     private SQLiteDatabase db;
-    private String idcadastro;
 
     private static final String[] CORES = new String [] {
         "Branco", "Cinza", "Prata", "Preto",
         "Vermelho", "Azul", "Verde", "Bege",
-        "Amarelo", "Rosa"
+        "Amarelo", "Laranja", "Rosa", "Roxo", "Marrom"
     };
 
     @Override
@@ -53,7 +52,7 @@ public class FormularioActivity extends AppCompatActivity {
         uf = (Spinner) findViewById(R.id.uf);
 
         Intent intent = getIntent();
-        idcadastro = intent.getStringExtra("idcadastro");
+        String idcadastro = intent.getStringExtra("idcadastro");
 
         if (idcadastro != null && !idcadastro.isEmpty()) {
             carregarDados("select * from tbplacas where id='" + idcadastro + "'");
@@ -65,7 +64,9 @@ public class FormularioActivity extends AppCompatActivity {
     }
 
     public void salvar(View view) {
-        ContentValues values = new ContentValues(); // pegar as coluna com os valores digitados
+        String idcadastro = obterIdCadastroAtual();
+
+        ContentValues values = new ContentValues();
         if (idcadastro != null && !idcadastro.isEmpty()) {
             values.put("id", idcadastro);
         }
@@ -90,11 +91,32 @@ public class FormularioActivity extends AppCompatActivity {
         }
     }
 
+    public void excluir(View view) {
+        String idcadastro = obterIdCadastroAtual();
+        int result = -1;
+        if (idcadastro != null && !idcadastro.isEmpty()) {
+            result = db.delete("tbplacas", "id=" + idcadastro, null); //deletar
+        }
+        if (result >= 0) {
+            notificar("Item excluido");
+        }
+    }
+
+    private String obterIdCadastroAtual() {
+        String idcadastro = null;
+        Cursor cursor = db.rawQuery("select id from tbplacas where placa='" + placa.getText().toString().toUpperCase() + "'", null);
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            idcadastro = cursor.getString(0);
+        }
+        cursor.close();
+        return idcadastro;
+    }
+
     private void carregarDados(String sql) {
         Cursor cursor = db.rawQuery(sql, null); // comando select com cursor
         cursor.moveToFirst(); // posiciona o curso no primeiro registro
         if (!cursor.isAfterLast()) {
-            idcadastro = cursor.getString(0);
             placa.setText(cursor.getString(1));
             serial.setText(cursor.getString(2));
             ano.setText(cursor.getString(3));

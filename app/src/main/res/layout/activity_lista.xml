@@ -28,6 +28,13 @@
                 android:text="PLA" />
 
             <Button
+                android:id="@+id/btnIncompletos"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:onClick="incompletos"
+                android:text="ERR" />
+
+            <Button
                 android:id="@+id/btnNovo"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"

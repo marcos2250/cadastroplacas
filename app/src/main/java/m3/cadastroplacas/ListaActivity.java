@@ -56,6 +56,10 @@ public class ListaActivity extends AppCompatActivity {
         atualizaLista("select * from tbplacas order by placa");
     }
 
+    public void incompletos(View view) {
+        atualizaLista("select * from tbplacas where serial = '' or ano = '' order by placa");
+    }
+
     public void importarExportar(View view) {
         Intent intent = new Intent(this, ImportExportActivity.class);
         startActivity(intent);

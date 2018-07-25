@@ -33,7 +33,6 @@
             android:id="@+id/text"
             android:inputType="textMultiLine"
             android:lines="50"
-            android:maxLines="100000"
             android:textSize="10px"/>
 
     </LinearLayout>

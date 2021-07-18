@@ -60,7 +60,8 @@ public class FormularioActivity extends AppCompatActivity {
     }
 
     public void carregar(View view) {
-        carregarDados("select * from tbplacas where placa='" + placa.getText().toString().toUpperCase() + "'");
+        String query = queryPlacaMercosul();
+        carregarDados(query);
     }
 
     public void salvar(View view) {
@@ -102,9 +103,32 @@ public class FormularioActivity extends AppCompatActivity {
         }
     }
 
+    private String queryPlacaMercosul() {
+        String vlEntrada = placa.getText().toString().toUpperCase().replaceAll("[^A-Z\\d]", "");
+        if (vlEntrada.length() < 7) {
+            notificar("Placa deve conter 7 posicoes!");
+            return null;
+        }
+
+        String placaAntiga;
+        String placaMercosul;
+        char alpha = vlEntrada.charAt(4);
+        if (alpha >= 48 && alpha <= 57) {
+            placaAntiga = vlEntrada;
+            placaMercosul = vlEntrada.substring(0,4) + String.valueOf((char) (alpha + 17)) + vlEntrada.substring(5,7);
+        } else {
+            placaAntiga = vlEntrada.substring(0,4) + String.valueOf((char) (alpha - 17)) + vlEntrada.substring(5,7);
+            placaMercosul = vlEntrada;
+        }
+
+        return "select * from tbplacas where placa='" + placaAntiga + "' or placa='" + placaMercosul + "'";
+    }
+
     private String obterIdCadastroAtual() {
         String idcadastro = null;
-        Cursor cursor = db.rawQuery("select id from tbplacas where placa='" + placa.getText().toString().toUpperCase() + "'", null);
+        String query = queryPlacaMercosul();
+
+        Cursor cursor = db.rawQuery(query, null);
         cursor.moveToFirst();
         if (!cursor.isAfterLast()) {
             idcadastro = cursor.getString(0);
@@ -129,13 +153,17 @@ public class FormularioActivity extends AppCompatActivity {
             uf.setSelection(getSpinnerIndex(uf, cursor.getString(7)));
             obs.setText(cursor.getString(8));
 
-            notificar("Dados carregados");
+            int count = cursor.getCount();
+            if (count > 1) {
+                notificar("Ha " + count + " registros de veiculos!");
+            } else {
+                notificar("Dados carregados");
+            }
         } else {
             notificar("Veiculo nao cadastrado");
         }
 
         cursor.close();
-
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString){

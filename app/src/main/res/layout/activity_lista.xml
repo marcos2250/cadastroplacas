@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_lista"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:minHeight="360px">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:minHeight="360px"
         android:orientation="vertical">
 
         <GridLayout
@@ -35,6 +38,13 @@
                 android:text="ERR" />
 
             <Button
+                android:id="@+id/btnLoc"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:onClick="localizar"
+                android:text="LOC" />
+
+            <Button
                 android:id="@+id/btnNovo"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
@@ -52,8 +62,9 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="340dp"
+            android:layout_height="match_parent"
+            android:minHeight="360px"
             android:id="@+id/lista"/>
 
     </LinearLayout>
-</ScrollView>
+</android.support.constraint.ConstraintLayout>

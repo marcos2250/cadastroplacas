@@ -1,5 +1,7 @@
 package m3.cadastroplacas;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -59,6 +62,42 @@ public class ListaActivity extends AppCompatActivity {
     public void incompletos(View view) {
         atualizaLista("select * from tbplacas where serial = '' or ano = '' order by placa");
     }
+
+    public void localizar(View view) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Localizar");
+        alert.setMessage("Placa ou descrição:");
+
+        String descricao;
+
+        final EditText input = new EditText(this);
+        alert.setView(input);
+
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String descricao = input.getText().toString();
+                consultarPorDescricao(descricao);
+            }
+        });
+        alert.show();
+    }
+
+    public void consultarPorDescricao(String descricao) {
+        if (descricao == null || descricao.isEmpty()) {
+            return;
+        }
+
+        atualizaLista("select * from tbplacas " +
+                "where placa like '%" + descricao + "%' " +
+                "or ano like '%" + descricao + "%' " +
+                "or serial like '%" + descricao + "%' " +
+                "or obs like '%" + descricao + "%' " +
+                "or cor like '%" + descricao + "%' " +
+                "or versao like '%" + descricao + "%' " +
+                "order by placa");
+    }
+
 
     public void importarExportar(View view) {
         Intent intent = new Intent(this, ImportExportActivity.class);

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/cadastroplacas.iml" filepath="$PROJECT_DIR$/cadastroplacas.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/cadastroplacas.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/cadastroplacas.app.iml" />
     </modules>
   </component>
 </project>
